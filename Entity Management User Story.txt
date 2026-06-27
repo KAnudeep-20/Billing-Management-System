@@ -1,0 +1,342 @@
+Billing staff logs into applications and Navigates to Manager Customers via navigator on the right.
+
+1. Search for a Customer 
+On Navigating to Manage Customer page, Customers Billing staff has access to are listed in a table view with a search bar on the top of table, 
+Search bar on the table is a key word based search, which finds customers by name, Account Name or Contact Name. 
+User select the customer by clicking on customer name and navigates to Customer details based on key word search match ( wheater is a Customer Name . Account Name or Contact Name ), show the view 
+    When user Navigates to Customer details page, high level details of customer are shown on top as tabs Customer TIN number , Payment terms and credit profile. This section occupies about 13-15% of screen view (or can have this as a side drawer)
+    Next section has Account details of a customer accounts list . On navigating to the page, first Account (first row) on the customer is selected .
+    Below section diplays Sites for Customer account . which detail Site address ( captured as 3 columns in db , contactinated adrress is shown here). Purpose of site (Ship-to /Bill-to). It is displayed as 2 columns with checkbox .
+    There should be atleast one site that is marked as primary site.
+
+
+2. Create a Customer 
+User Naviagets to Manage Customer page , click on add customer button next to search button side search bar
+Enter Custmer Name and Type of customer. Customer can be a person or a organization( choose the type from choice list).
+If its organization capture details of TIN .
+If its Person , capture Name of the person and identification number and type of identification ( Aadhar ,PAN , Driver Licence).
+Capture the payment terms agreed with the customer.
+Capture Account detail for a customer . Account details has details of Account Name, Nature of Business, 
+Capture the Bill-to-site and Ship-to-site . One site for a contact is mandatory. Marking altest one site as primary is mandatory
+Capture the contact on the Account. Atleast one contact is mandatory on the Account.if there are no contact for account while creating the Account details , crate a place holder row for the contact and mark details as missing on the row. This would be used for follow up.
+Enter the credit limit that can be provided to the customer.Credit details capture the amout of credit allowed, Payment terms capture the credit time line details.
+
+
+
+--- replace customer with entity in above --entity can become customer, supplier or any other like patner,investor,....
+
+
+==========================================
+Section 2: Product Requirements Document
+==========================================
+Entity Management Module (Customer / Supplier / Partner / Investor)
+2.1. Overview:
+
+    The Entity Management module enables billing and operations staff to create, search, and manage different types of business entities such as Customers, Suppliers, Partners, and Investors within a unified system.
+
+    The system supports:
+
+    Entity discovery via search
+    Entity creation with type-specific attributes
+    Hierarchical management (Entity → Accounts → Sites → Contacts)
+    Credit, payment, and identification management
+2.2. User Roles
+    Billing Staff: Primary user for search, view, and creation of entities
+    Finance Admin: Manages credit profiles and payment terms
+    Operations Staff: Maintains entity account/site/contact data
+2.3. Entity Types Supported
+
+    The system must support configurable entity types:
+
+    Customer
+    Supplier
+    Partner
+    Investor
+    Others (configurable)
+
+    Each entity type may have shared core attributes + type-specific fields.
+
+2.4. Navigation & Entry Point
+
+    Users access the module via:
+
+    Right-side application navigator → “Manage Entities”
+
+    Landing page:
+
+    Entity listing table
+    Search bar (keyword-based)
+    “Add Entity” button
+2.5. Feature 1: Search Entities
+    2.5.1 Search Behavior
+        A global search bar is placed above the entity table
+        Search is keyword-based and supports matching on:
+        Entity Name
+        Account Name
+        Contact Name
+    2.5.2 Search Results
+        Results are displayed in a table view
+        Each row represents an Entity
+        Clicking an Entity Name navigates to Entity Details page
+    2.5.3 Search Matching Rules
+        Search must support partial match
+        Must return results if match occurs in any of:
+        Entity Name
+        Account Name
+        Contact Name
+2.6. Feature 2: Entity Details View
+    2.6.1 Page Layout
+
+        Entity Details page is divided into 3 sections:
+
+        Section A: Entity Summary (Top Panel / 13–15% screen)
+
+        Displays key attributes:
+
+        Entity Name
+        Entity Type
+        TIN / Tax Identification Number (if applicable)
+        Payment Terms
+        Credit Profile Summary
+
+        This section can be implemented as:
+
+        Top fixed panel OR
+        Right-side collapsible drawer
+        Section B: Accounts Section
+        Displays list of Accounts associated with the Entity
+        Tabular view includes:
+        Account Name
+        Nature of Business
+        Status (Active/Inactive)
+
+        Behavior:
+
+        First account row is auto-selected on page load
+        Selecting an account updates dependent sections below
+        Section C: Sites Section
+        Displays Sites linked to the selected Account
+        Each site includes:
+        Address Line 1
+        Address Line 2
+        Address Line 3
+        Contact Information
+        Purpose: Ship-to / Bill-to
+        UI Rules:
+        Address must be displayed as concatenated single string
+        Site list shown in table format with checkbox columns
+        Each site must have:
+        Ship-to flag
+        Bill-to flag
+        Validation Rules:
+        At least one site must be marked as Primary
+        System must prevent saving without primary site
+2.7. Feature 3: Create Entity
+    7.1 Entry Point
+    “Add Entity” button on Manage Entity page
+2.7.2 Entity Creation Form
+        Step 1: Basic Details
+        Entity Name (mandatory)
+        Entity Type (dropdown):
+        Customer / Supplier / Partner / Investor / Other
+        Step 2: Identity Details (Conditional)
+        If Entity Type = Organization:
+        TIN Number (mandatory)
+        If Entity Type = Person:
+        Full Name (mandatory)
+        Identification Type (dropdown):
+        Aadhar / PAN / Driving License
+        Identification Number (mandatory)
+        Step 3: Payment & Credit Details
+        Payment Terms (mandatory)
+        Credit Limit Amount
+        Credit Time Period (linked to payment terms)
+        Step 4: Account Details
+
+        Each entity must have at least one Account.
+
+        Account fields:
+
+        Account Name
+        Nature of Business
+        Step 5: Sites (Per Account)
+
+        Each account must contain at least one site.
+
+        Site fields:
+
+        Address Line 1
+        Address Line 2
+        Address Line 3
+        Purpose:
+        Ship-to
+        Bill-to
+        Validation Rules:
+        At least one site is mandatory
+        At least one site must be marked as Primary
+        Step 6: Contacts (Per Account)
+
+        Each account must have at least one contact.
+
+        Contact fields:
+
+        Contact Name
+        Phone / Email (if available)
+        Role / Designation
+        Special Rule:
+
+        If no contact exists during account creation:
+
+        System must auto-create a placeholder contact row
+        Mark fields as:
+        “Missing Information”
+        This should be flagged for follow-up
+2.8. Data Model (Logical Structure)
+        Entity
+        Account (1:N with Entity)
+        Site (1:N with Account)
+        Contact (1:N with Account)
+
+2.9. Key Business Rules
+        Entity must have at least one Account
+        Each Account must have:
+        At least one Site
+        At least one Contact
+        Each Account must have at least one Primary Site
+        Contacts can be auto-generated as placeholders if missing
+        Search must cover Entity, Account, Contact names
+        Entity Type determines required identity fields
+2.10. UX / UI Requirements
+        Table-based listing for Entities
+        Sticky search bar on top
+        Auto-selection of first Account on detail load
+        Clear hierarchy:
+        Entity → Account → Site → Contact
+        Validation errors shown inline
+        Missing contact placeholders highlighted visually
+2.11. Non-Functional Requirements
+        Search response time < 2 seconds for 50k records
+        Support for configurable entity types
+        Role-based access control (future extension)
+        Audit trail for entity creation and edits
+2.12. Future Enhancements
+        Entity merging / deduplication
+
+
+
+======================
+Section 3 : Data Model
+======================
+
+
++---------------------+
+| CX_ENTITY         |
++---------------------+
+| Id (PK)           |
+| ENTITY_Name       |
+| ENTITY_Number     | 
+| Description       |.   CX_ENTITY_ROLES (which cna be Cusomter/supplier/partner)
+| ENTITY_Type_Id.   |
+| Status              |
+| Payment_Terms_id    |
+| Credit_limit        |
+| Credit_limit_currency |
+|                     |
++---------------------+
+
+
+
++---------------------+
+| CX_ENTITY_TYPE    |
++---------------------+
+| cust_type_Id (PK)   |
+| ENTITY_type_name  | -- ENTITY can be Organization or Person 
+|                     |
+|                     |
++---------------------+
+
++------------------------+
+| CX_ENTITY_DETAILS    |
++------------------------+
+| ENTITY_ID (PK)       |
+| GSTIN                  | 
+| PAN                    |
+| LE_Registraion_number. |
+| VAT_NUMBER.            |
++------------------------+
+
++---------------------------+
+| CX_ENTITY_REL_TYPES     |
++---------------------------+
+| REL_TYPE_ID (PK)          |
+| REL_NAME                  | --ParentOf/SubsidoryOf , FranchaiseOF, Distributor,
+|                           | --Extendable
++---------------------------+
+
+
++---------------------------+
+| CX_ENTITY_RELATIONSHIPS |
++---------------------------+
+| ID (PK)                   |
+| SUBJECT_ENTITY_ID       | 
+| REL_TYPE_ID               |
+| OBJECT_ENTITY_ID        |
++---------------------------+
+
+
++---------------------------+
+| CX_ENTITY_ACCOUNTS.     |.     
++---------------------------+                             +-----------------------+
+| CUST_ACCT_ID (PK)         |.    *-----many to 1 -----1  |   CX_ENTITY.        |
+| CUST_ACCT_NAME.           |                             +-----------------------+
+| CUST_ACCT_NUMBE           |
+| Descriptipn               |
+| Status                    |
+| sell_Payment_terms_id     |
+| buy_Payment_terms_id      |
+| Credit_limit_amount       |
+| creadit_classification_code| --lookup like GOLD /SILVER/BRONZE
+| credit_Risk_code           |. --Low/Medium/High
+| Credit_Assesed_date       |
+| Credit_Review_date        |
+| Billing_Cycle_id.         |
++---------------------------+
+
+
++---------------------------+
+| CX_CUST_ACCT_SITE         |
++---------------------------+
+
++---------------------------+
+| CX_CUST_ACCT_SITE_USE     |
++---------------------------+
+
++---------------------------+
+| CX_CUST_ACCT_CONTACTS     |
++---------------------------+
+| ID(PK) 
+| CUST_ACCT_ID              |.   ------   +---------------------------+
+| CONTACT_TYPE_ID           |             | CX_CUST_CONTACT_TYPE      |--EAMIL/PH/..
++---------------------------+             +---------------------------+
+
+
+
+
+
+
+come up with table stcuture for Payment terms.Billing Cycles
+
+
+========================
+Section 4: Rest end points
+==========================
+  setup :
+        paymentTerms
+        billingCycles
+        entityAccountSiteUses
+        entityContactTypes
+        entityRelationsShips
+
+  Transaction:
+         entity
+

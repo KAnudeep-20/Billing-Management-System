@@ -1,0 +1,9 @@
+# ==================== Dev Profile ====================
+# Activate with: --spring.profiles.active=dev
+
+logging:
+  level:
+    com.aibilling: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.web: DEBUG

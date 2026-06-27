@@ -1,0 +1,14 @@
+# ==================== Prod Profile ====================
+# Activate with: --spring.profiles.active=prod
+
+logging:
+  level:
+    com.aibilling: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+    org.springframework.web: WARN
+
+management:
+  endpoint:
+    health:
+      show-details: never

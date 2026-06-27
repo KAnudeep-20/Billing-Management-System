@@ -1,0 +1,3 @@
+com\aibilling\config\JpaAuditingConfigTest.class
+com\aibilling\exception\GlobalExceptionHandlerTest.class
+com\aibilling\AiBillingApplicationTests.class
