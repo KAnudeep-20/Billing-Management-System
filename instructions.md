@@ -1,381 +1,435 @@
-# Entity Management - Frontend, Backend & Database Audit Instructions
+# AI Billing System - Catalog Management Backend Implementation Instructions
 
-# Objective
+## Project Overview
 
-Perform a complete audit of the Entity Management module across:
+You are extending an existing enterprise application called **AI Billing System**.
 
-* Frontend
-* Backend
-* Database (Supabase)
+Current project directory structure:
 
-The objective is to identify the root causes of the existing issues, fix them correctly, clean invalid data, and verify the entire Entity Management workflow.
+Billing Management/
+│
+├── Entity-Management-Backend/
+├── Entity-Management-Frontend/
+├── Catalog Module.png
+└── (this instructions.md)
 
-Do not implement new features.
+The Entity Management feature has already been fully implemented in both backend and frontend.
 
-Only fix defects, clean invalid data, and ensure the existing implementation behaves exactly as intended by the Entity Management requirements.
+Your responsibility is to implement **ONLY the backend** for the next feature:
 
----
+# Catalog Management
 
-# IMPORTANT
-
-Use the connected **Supabase MCP** to inspect the database directly.
-
-Do not assume the frontend is wrong.
-
-Do not assume the backend is wrong.
-
-Determine the actual root cause before making changes.
+Do NOT modify the existing Entity Management functionality unless integration is required.
 
 ---
 
-# Issue 1 - Search Results Showing "N/A"
+# Step 1 - Understand the Existing Project (Mandatory)
 
-## Problem
+Before writing any code, thoroughly analyze the existing backend project.
 
-Searching for an entity correctly returns the matching record.
+Location:
 
-However, every search result is displayed as:
+Entity-Management-Backend/
 
-"N/A"
+Understand:
 
-Clicking the result navigates to the correct Entity Details page.
+- Overall project architecture
+- Package structure
+- Layered architecture
+- Coding conventions
+- Naming conventions
+- Entity structure
+- DTO pattern
+- Repository pattern
+- Service layer
+- Controller design
+- Exception handling
+- Validation strategy
+- API response format
+- Audit implementation
+- Logging
+- Soft delete implementation
+- Flyway migration strategy
+- Lookup implementation
+- Existing utility classes
+- Existing configuration
+- Existing security implementation (if present)
 
-This indicates that:
+The Catalog Management module MUST follow exactly the same architecture and coding style.
 
-* search is finding the correct entity
-* identifier is correct
-* display field is incorrect
-
-## Tasks
-
-Inspect:
-
-Frontend
-
-* Search component
-* Search dropdown
-* Search result renderer
-* Entity model
-* API response mapping
-
-Backend
-
-* Search endpoint
-* DTO mapping
-* Projection
-* Response serializer
-
-Database
-
-Verify that Entity Name is actually stored.
-
-Determine why "N/A" is being rendered.
-
-Fix the root cause.
-
-Search results must display the real Entity Name.
+Do not introduce a new architecture.
 
 ---
 
-# Issue 2 - Invalid Entity Records
+# Step 2 - Analyze the Catalog Module Architecture (Mandatory)
 
-Inspect every entity stored in Supabase.
+Open and study:
 
-Find all entities that violate the business rules.
+Catalog Module.png
+
+located inside:
+
+Billing Management/
+
+Do not begin implementation until the entire architecture has been understood.
+
+Analyze:
+
+- Domain model
+- Entity relationships
+- Business workflow
+- Inventory workflow
+- Category hierarchy
+- UOM management
+- Warehouse management
+- Inventory transactions
+- Business rules
+- Lookup data
+- Master data dependencies
+
+The image is the business source of truth.
+
+Implement according to it.
+
+---
+
+# Step 3 - Understand Module Scope
+
+The Catalog Management module is NOT simply Product Management.
+
+It is an enterprise master-data module responsible for:
+
+• Catalog Categories
+• Catalog Items
+• Item UOMs
+• Warehouses
+• Inventory Balances
+• Inventory Transactions
+
+This module will become the foundation for:
+
+Order Management
+
+↓
+
+Transaction Management
+
+↓
+
+Invoice Management
+
+↓
+
+AI Insights
+
+↓
+
+Predictive Cash Flow
+
+Design accordingly.
+
+---
+
+# Step 4 - Preserve Existing Project Standards
+
+Everything added must follow the existing backend implementation.
+
+Reuse:
+
+- Base entities
+- Base repositories
+- Base services
+- Common DTOs
+- Generic response wrappers
+- Exception handlers
+- Validation annotations
+- Audit framework
+- Lookup architecture
+
+Never duplicate functionality that already exists.
+
+---
+
+# Step 5 - Backend Implementation Order
+
+Implement incrementally.
+
+Phase 1
+
+Catalog Category
+
+- Database
+- Entity
+- Repository
+- DTOs
+- Mapper
+- Service
+- Controller
+- Validation
+- Flyway Migration
+
+Business Rules
+
+- Parent Category support
+- Recursive hierarchy
+- Active/Inactive
+- Only leaf categories can contain catalog items
+
+---
+
+Phase 2
+
+Catalog Item
+
+Implement
+
+- Entity
+- DTOs
+- CRUD APIs
+- Validation
+- Mapping
+- Relationships
+
+Support
+
+- Goods
+- Services
+- Software
+- Licenses
+- Warranty
+
+Item Behaviour Flags
+
+- Sellable
+- Purchasable
+- Inventory Tracked
+- Stocked
+- Service Item
+
+---
+
+Phase 3
+
+Item UOM
+
+Implement
+
+- UOM Mapping
+- Primary UOM
+- Conversion Factors
+
+Rules
+
+- One Primary UOM
+- Multiple Secondary UOMs
+- Conversion validation
+
+---
+
+Phase 4
+
+Warehouse
+
+Implement
+
+Warehouse Master
+
+Support
+
+- CRUD
+- Status
+- Address
+- Validation
+
+---
+
+Phase 5
+
+Inventory Balance
+
+Implement inventory balance model.
+
+Inventory Balance should NOT be manually edited.
+
+It must always represent the calculated stock.
+
+---
+
+Phase 6
+
+Inventory Transactions
+
+Implement inventory ledger.
+
+Support transaction types such as:
+
+- Purchase Receipt
+- Sales Issue
+- Purchase Return
+- Sales Return
+- Inventory Adjustment
+- Transfer In
+- Transfer Out
+- Reservation
+- Reservation Release
+
+Inventory Balance must be updated through transactions.
+
+Never update stock directly.
+
+---
+
+# Step 6 - Database
+
+Follow existing Flyway migration strategy.
+
+Create normalized tables.
+
+Follow naming conventions already used in Entity Management.
+
+Maintain proper foreign keys.
+
+Maintain indexes where required.
+
+Do not duplicate lookup tables if reusable ones already exist.
+
+---
+
+# Step 7 - REST APIs
+
+Design REST endpoints consistent with the Entity Management module.
+
+Support:
+
+Categories
+
+- Create
+- Update
+- Delete
+- Search
+- Get Details
+
+Catalog Items
+
+- CRUD
+- Search
+
+Warehouses
+
+- CRUD
+
+UOM
+
+- CRUD
+
+Inventory Transactions
+
+- Create
+- Search
+- History
+
+Inventory Balance
+
+- View
+
+Maintain existing response structure.
+
+---
+
+# Step 8 - Validation
+
+Implement all business rules.
 
 Examples:
 
-Entity without Account
+- Category hierarchy validation
+- Leaf category validation
+- Primary UOM validation
+- Warehouse validation
+- Inventory quantity validation
+- Duplicate code prevention
+- Required fields
+- Status validation
 
-Entity without Site
-
-Entity without Contact
-
-Invalid payment terms
-
-Broken relationships
-
-Orphaned records
-
-Missing mandatory information
-
-Any record violating the PRD should be considered invalid.
+Validation should exist in both DTOs and Service layer where appropriate.
 
 ---
 
-# Issue 3 - Clean Invalid Data
+# Step 9 - Exception Handling
 
-Delete every invalid entity.
+Reuse existing exception architecture.
 
-Do not delete valid entities.
+Never return raw exceptions.
 
-Respect foreign key constraints.
-
-Delete dependent records correctly.
-
-After cleanup:
-
-Database should only contain valid entities.
+Return standardized API responses.
 
 ---
 
-# Issue 4 - Seed Correct Sample Data
+# Step 10 - Logging & Auditing
 
-Create realistic sample entities.
+Every create, update, delete operation must follow the same audit mechanism already implemented in Entity Management.
 
-Use the application APIs if possible.
-
-If necessary, insert directly into Supabase while maintaining referential integrity.
-
-Create multiple examples for:
-
-Customer
-
-Supplier
-
-Partner
-
-Investor
-
-Each sample entity must contain:
-
-Entity
-
-At least one Account
-
-At least one Site
-
-One Primary Site
-
-At least one Contact
-
-Valid Payment Terms
-
-Credit Information
-
-Entity Type
-
-Relationship (where applicable)
-
-The sample data should resemble production-quality business data.
+Do not introduce a separate audit system.
 
 ---
 
-# Issue 5 - "N/A" Entity Cannot Be Deleted
+# Step 11 - Code Quality
 
-There is an entity displayed as:
+Follow:
 
-"N/A"
-
-Delete action does not work.
-
-Investigate:
-
-Frontend
-
-Backend
-
-Database
-
-Possible causes include:
-
-Soft delete issue
-
-Foreign key constraint
-
-Delete API bug
-
-Entity ID mismatch
-
-Orphaned records
-
-Permission issue
-
-Broken transaction
-
-Determine the exact cause.
-
-If the entity is invalid:
-
-Delete it safely.
-
-If it is valid:
-
-Repair it so that it behaves normally.
-
-The Delete button must work correctly.
+- SOLID principles
+- Clean Architecture
+- Layer separation
+- Reusable services
+- Constructor injection
+- No duplicated logic
+- Clear package organization
+- Meaningful class names
 
 ---
 
-# Issue 6 - Entity Details Consistency
+# Step 12 - Integration
 
-Verify every Entity Details page.
+The new module must integrate cleanly into the existing backend.
 
-Ensure:
+Do not break Entity Management.
 
-Entity Summary
+Reuse existing infrastructure whenever possible.
 
-Accounts
-
-Sites
-
-Contacts
-
-Relationships
-
-Payment Terms
-
-Credit Information
-
-All load correctly.
-
-No missing fields.
-
-No placeholder values.
-
-No "N/A" values unless genuinely absent.
+Catalog Management should feel like it has always been part of the project.
 
 ---
 
-# Backend Audit
+# Expected Deliverables
 
-Verify:
+The task is complete only when:
 
-Search endpoint
+✓ Catalog Categories implemented
 
-Entity details endpoint
+✓ Catalog Items implemented
 
-Delete endpoint
+✓ Item UOM implemented
 
-Entity retrieval
+✓ Warehouses implemented
 
-DTO mapping
+✓ Inventory Balance implemented
 
-MapStruct mappings
+✓ Inventory Transactions implemented
 
-Null handling
+✓ Flyway migrations added
 
-Validation
+✓ REST APIs completed
 
-Exception handling
+✓ Validation completed
 
-Logging
+✓ Logging integrated
 
-No hidden exceptions.
+✓ Auditing integrated
 
----
+✓ Existing architecture preserved
 
-# Frontend Audit
+✓ Backend compiles successfully
 
-Verify:
+Do not begin frontend implementation.
 
-Search component
-
-API integration
-
-React Query / Data fetching
-
-Display mapping
-
-Delete action
-
-Cache invalidation
-
-Entity Details rendering
-
-Forms
-
-Routing
-
-Fix any incorrect property mappings.
-
----
-
-# Database Audit
-
-Using Supabase MCP:
-
-Inspect:
-
-Entities
-
-Accounts
-
-Sites
-
-Contacts
-
-Relationships
-
-Payment Terms
-
-Entity Types
-
-Contact Types
-
-Site Uses
-
-Billing Cycles
-
-Ensure:
-
-No orphaned rows
-
-No invalid references
-
-No duplicate records
-
-No broken foreign keys
-
-Repair any inconsistencies.
-
----
-
-# Validation
-
-After completing all fixes, verify the following:
-
-Search returns the correct entities.
-
-Search displays actual Entity Names.
-
-Entity Details page loads correctly.
-
-Delete works.
-
-No "N/A" entities remain unless valid.
-
-Every entity satisfies:
-
-* at least one Account
-* at least one Site
-* one Primary Site
-* at least one Contact
-
-Seeded entities appear correctly.
-
-CRUD operations still function.
-
-Create Entity flow still works without regression.
-
-No frontend console errors.
-
-No backend exceptions.
-
-No database inconsistencies.
-
-Finally perform an end-to-end verification:
-
-Create Entity
-
-Search Entity
-
-Open Entity Details
-
-Update Entity
-
-Delete Entity
-
-Repeat for multiple entity types.
-
-Only declare the task complete after every verification succeeds.
+Only implement the backend for Catalog Management.
