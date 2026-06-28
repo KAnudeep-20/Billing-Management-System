@@ -14,9 +14,17 @@ import ContactFormModal from './features/entity-management/components/ContactFor
 import useLookupData from './features/entity-management/hooks/useLookupData';
 import entityService from './services/entityService';
 import './features/entity-management/EntityManagement.css';
-import { ShieldAlert, Info, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { ShieldAlert, Info, AlertTriangle, ArrowLeft, Users, Package, Boxes } from 'lucide-react';
+
+import CategoryManager from './features/catalog-management/components/CategoryManager';
+import CatalogItemsManager from './features/catalog-management/components/CatalogItemsManager';
+import WarehouseManager from './features/catalog-management/components/WarehouseManager';
+import InventoryBalanceManager from './features/catalog-management/components/InventoryBalanceManager';
+import InventoryTransactionManager from './features/catalog-management/components/InventoryTransactionManager';
 
 export default function App() {
+  const [currentView, setCurrentView] = useState('entities');
+
   // Global lookups data
   const { lookups, loading: lookupsLoading, error: lookupsError } = useLookupData();
 
@@ -419,8 +427,244 @@ export default function App() {
     }
   };
 
+  const renderDashboard = () => {
+    return (
+      <div className="entity-management-page animate-fade-in">
+        <div className="page-header-row">
+          <div className="page-title-group">
+            <h1>Business Operations Portal</h1>
+            <p>Welcome to AI Billing Management Portal. Select a module from the sidebar application drawer to begin.</p>
+          </div>
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--space-6)', marginTop: 'var(--space-4)' }}>
+          <div className="section-card clickable-row" onClick={() => setCurrentView('entities')} style={{ backgroundColor: 'var(--color-bg-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-6)', boxShadow: 'var(--shadow-md)', transition: 'all var(--transition-normal)' }}>
+            <Users size={32} style={{ color: 'var(--color-primary)', marginBottom: 'var(--space-3)' }} />
+            <h3 style={{ fontSize: '1.2rem', marginBottom: 'var(--space-2)' }}>Entity Accounts</h3>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem' }}>Manage customer directories, organization specs, profiles, site addresses, and contact points.</p>
+          </div>
+
+          <div className="section-card clickable-row" onClick={() => setCurrentView('items')} style={{ backgroundColor: 'var(--color-bg-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-6)', boxShadow: 'var(--shadow-md)', transition: 'all var(--transition-normal)' }}>
+            <Package size={32} style={{ color: 'var(--color-success)', marginBottom: 'var(--space-3)' }} />
+            <h3 style={{ fontSize: '1.2rem', marginBottom: 'var(--space-2)' }}>Product Catalog</h3>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem' }}>Configure list items, SKUs, sales services, and specify secondary Units of Measure conversion factors.</p>
+          </div>
+
+          <div className="section-card clickable-row" onClick={() => setCurrentView('inventory')} style={{ backgroundColor: 'var(--color-bg-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-6)', boxShadow: 'var(--shadow-md)', transition: 'all var(--transition-normal)' }}>
+            <Boxes size={32} style={{ color: 'var(--color-warning)', marginBottom: 'var(--space-3)' }} />
+            <h3 style={{ fontSize: '1.2rem', marginBottom: 'var(--space-2)' }}>Stock Inventory</h3>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem' }}>Monitor real-time depot balance levels, reserved quantities, and log stock ledger transactions.</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderContentView = () => {
+    switch (currentView) {
+      case 'categories':
+        return <CategoryManager triggerNotification={triggerNotification} />;
+      case 'items':
+        return <CatalogItemsManager triggerNotification={triggerNotification} />;
+      case 'warehouses':
+        return <WarehouseManager triggerNotification={triggerNotification} />;
+      case 'inventory':
+        return <InventoryBalanceManager triggerNotification={triggerNotification} />;
+      case 'transactions':
+        return <InventoryTransactionManager triggerNotification={triggerNotification} />;
+      case 'dashboard':
+        return renderDashboard();
+      case 'entities':
+      default:
+        return (
+          <>
+            <div className="entity-management-page">
+              {/* Header Title */}
+              <div className="page-header-row">
+                <div className="page-title-group">
+                  <h1>Entity Accounts Manager</h1>
+                  <p>Manage organizations, persons, business accounts, addresses, and contacts.</p>
+                </div>
+              </div>
+
+              {lookupsError && (
+                <div className="placeholder-warning-alert" style={{ borderColor: 'var(--color-error)', color: 'var(--color-error)', backgroundColor: 'var(--color-error-bg)' }}>
+                  <AlertTriangle size={18} />
+                  <span><strong>Warning:</strong> {lookupsError}. The lookups will fallback to defaults, but save operations might fail. Please ensure the backend server is running.</span>
+                </div>
+              )}
+
+              {/* Global Search & Action Toolbar */}
+              <SearchToolbar
+                query={searchQuery}
+                onSearchChange={setSearchQuery}
+                onAddClick={() => {
+                  setEditingEntity(null);
+                  setIsWizardOpen(true);
+                }}
+              />
+
+              {/* Dynamic Details / Listing Layout */}
+              {selectedEntityDetails ? (
+                /* DETAILS VIEW (Progressive Disclosure) */
+                <div className="details-layout animate-fade-in">
+                  {/* Back to List row */}
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <button 
+                      className="btn btn-secondary"
+                      onClick={() => {
+                        setSelectedEntityId(null);
+                        setSelectedEntityDetails(null);
+                      }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                    >
+                      <ArrowLeft size={16} />
+                      <span>Back to Customer Directory</span>
+                    </button>
+                  </div>
+
+                  {/* Section A: Entity Summary Card */}
+                  <EntitySummaryCard
+                    entity={selectedEntityDetails.entitySummary}
+                    selectedAccount={selectedAccount}
+                  />
+
+                  {/* Main Details Grid */}
+                  <div className="grid-two-columns">
+                    {/* Left Column: Accounts & Relationships */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+                      {/* Section B: Accounts Table */}
+                      <AccountTable
+                        accounts={selectedEntityDetails.accounts}
+                        selectedAccountId={selectedAccountId}
+                        onAccountSelect={handleAccountSelect}
+                        onAddAccountClick={() => {
+                          setEditingAccount(null);
+                          setIsAccountModalOpen(true);
+                        }}
+                        onEditAccountClick={(acct) => {
+                          setEditingAccount(acct);
+                          setIsAccountModalOpen(true);
+                        }}
+                        onDeleteAccountClick={handleDeleteAccount}
+                      />
+
+                      {/* Section E: Relationships */}
+                      <RelationshipSection
+                        entityId={selectedEntityId}
+                        relationships={selectedEntityDetails.relationships}
+                        relationshipTypes={lookups.relationshipTypes}
+                        allEntities={entities}
+                        onAddRelationship={handleAddRelationship}
+                        onDeleteRelationship={handleDeleteRelationship}
+                      />
+                    </div>
+
+                    {/* Right Column: Sites & Contacts (per selected Account) */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+                      {selectedAccount ? (
+                        <>
+                          {/* Section C: Sites Table */}
+                          <SiteTable
+                            sites={selectedAccount.sites || []}
+                            onAddSiteClick={() => {
+                              setEditingSite(null);
+                              setIsSiteModalOpen(true);
+                            }}
+                            onEditSiteClick={(site) => {
+                              setEditingSite(site);
+                              setIsSiteModalOpen(true);
+                            }}
+                            onDeleteSiteClick={handleDeleteSite}
+                          />
+
+                          {/* Section D: Contacts Table */}
+                          <ContactTable
+                            contacts={selectedAccount.contacts || []}
+                            onAddContactClick={() => {
+                              setEditingContact(null);
+                              setIsContactModalOpen(true);
+                            }}
+                            onEditContactClick={(contact) => {
+                              setEditingContact(contact);
+                              setIsContactModalOpen(true);
+                            }}
+                            onDeleteContactClick={handleDeleteContact}
+                          />
+                        </>
+                      ) : (
+                        <div className="section-card" style={{ padding: 'var(--space-12)', textAlign: 'center', color: 'var(--color-text-secondary)' }}>
+                          Please select or add an Account to display Sites and Contacts details.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* PRIMARY DIRECTORY LIST VIEW */
+                <EntityTable
+                  entities={entities}
+                  loading={listLoading}
+                  selectedEntityId={selectedEntityId}
+                  onRowClick={handleEntityRowClick}
+                  onEditClick={(entity) => {
+                    setEditingEntity(entity);
+                    setIsWizardOpen(true);
+                  }}
+                  onDeleteClick={handleDeleteEntity}
+                  page={page}
+                  totalPages={totalPages}
+                  totalElements={totalElements}
+                  onPageChange={(p) => fetchEntities(searchQuery, p)}
+                />
+              )}
+            </div>
+
+            {/* --- FORM MODALS & DRAWERS --- */}
+
+            {/* 5-Step Customer Wizard Drawer */}
+            <MultiStepForm
+              isOpen={isWizardOpen}
+              onClose={() => setIsWizardOpen(false)}
+              onSubmit={handleWizardSubmit}
+              editEntity={editingEntity}
+              lookups={lookups}
+              lookupsLoading={lookupsLoading}
+            />
+
+            {/* Account Modal */}
+            <AccountFormModal
+              isOpen={isAccountModalOpen}
+              onClose={() => setIsAccountModalOpen(false)}
+              onSubmit={handleAccountSubmit}
+              editAccount={editingAccount}
+              lookups={lookups}
+            />
+
+            {/* Site Address Modal */}
+            <SiteFormModal
+              isOpen={isSiteModalOpen}
+              onClose={() => setIsSiteModalOpen(false)}
+              onSubmit={handleSiteSubmit}
+              editSite={editingSite}
+              lookups={lookups}
+            />
+
+            {/* Contact Details Modal */}
+            <ContactFormModal
+              isOpen={isContactModalOpen}
+              onClose={() => setIsContactModalOpen(false)}
+              onSubmit={handleContactSubmit}
+              editContact={editingContact}
+              lookups={lookups}
+            />
+          </>
+        );
+    }
+  };
+
   return (
-    <MainLayout>
+    <MainLayout currentView={currentView} onViewChange={setCurrentView}>
       {/* Toast Notification Banner */}
       {notification && (
         <div className={`notification-banner ${notification.type}`}>
@@ -429,186 +673,7 @@ export default function App() {
         </div>
       )}
 
-      <div className="entity-management-page">
-        {/* Header Title */}
-        <div className="page-header-row">
-          <div className="page-title-group">
-            <h1>Entity Accounts Manager</h1>
-            <p>Manage organizations, persons, business accounts, addresses, and contacts.</p>
-          </div>
-        </div>
-
-        {lookupsError && (
-          <div className="placeholder-warning-alert" style={{ borderColor: 'var(--color-error)', color: 'var(--color-error)', backgroundColor: 'var(--color-error-bg)' }}>
-            <AlertTriangle size={18} />
-            <span><strong>Warning:</strong> {lookupsError}. The lookups will fallback to defaults, but save operations might fail. Please ensure the backend server is running.</span>
-          </div>
-        )}
-
-        {/* Global Search & Action Toolbar */}
-        <SearchToolbar
-          query={searchQuery}
-          onSearchChange={setSearchQuery}
-          onAddClick={() => {
-            setEditingEntity(null);
-            setIsWizardOpen(true);
-          }}
-        />
-
-        {/* Dynamic Details / Listing Layout */}
-        {selectedEntityDetails ? (
-          /* DETAILS VIEW (Progressive Disclosure) */
-          <div className="details-layout animate-fade-in">
-            {/* Back to List row */}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <button 
-                className="btn btn-secondary"
-                onClick={() => {
-                  setSelectedEntityId(null);
-                  setSelectedEntityDetails(null);
-                }}
-                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-              >
-                <ArrowLeft size={16} />
-                <span>Back to Customer Directory</span>
-              </button>
-            </div>
-
-            {/* Section A: Entity Summary Card */}
-            <EntitySummaryCard
-              entity={selectedEntityDetails.entitySummary}
-              selectedAccount={selectedAccount}
-            />
-
-            {/* Main Details Grid */}
-            <div className="grid-two-columns">
-              {/* Left Column: Accounts & Relationships */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-                {/* Section B: Accounts Table */}
-                <AccountTable
-                  accounts={selectedEntityDetails.accounts}
-                  selectedAccountId={selectedAccountId}
-                  onAccountSelect={handleAccountSelect}
-                  onAddAccountClick={() => {
-                    setEditingAccount(null);
-                    setIsAccountModalOpen(true);
-                  }}
-                  onEditAccountClick={(acct) => {
-                    setEditingAccount(acct);
-                    setIsAccountModalOpen(true);
-                  }}
-                  onDeleteAccountClick={handleDeleteAccount}
-                />
-
-                {/* Section E: Relationships */}
-                <RelationshipSection
-                  entityId={selectedEntityId}
-                  relationships={selectedEntityDetails.relationships}
-                  relationshipTypes={lookups.relationshipTypes}
-                  allEntities={entities}
-                  onAddRelationship={handleAddRelationship}
-                  onDeleteRelationship={handleDeleteRelationship}
-                />
-              </div>
-
-              {/* Right Column: Sites & Contacts (per selected Account) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-                {selectedAccount ? (
-                  <>
-                    {/* Section C: Sites Table */}
-                    <SiteTable
-                      sites={selectedAccount.sites || []}
-                      onAddSiteClick={() => {
-                        setEditingSite(null);
-                        setIsSiteModalOpen(true);
-                      }}
-                      onEditSiteClick={(site) => {
-                        setEditingSite(site);
-                        setIsSiteModalOpen(true);
-                      }}
-                      onDeleteSiteClick={handleDeleteSite}
-                    />
-
-                    {/* Section D: Contacts Table */}
-                    <ContactTable
-                      contacts={selectedAccount.contacts || []}
-                      onAddContactClick={() => {
-                        setEditingContact(null);
-                        setIsContactModalOpen(true);
-                      }}
-                      onEditContactClick={(contact) => {
-                        setEditingContact(contact);
-                        setIsContactModalOpen(true);
-                      }}
-                      onDeleteContactClick={handleDeleteContact}
-                    />
-                  </>
-                ) : (
-                  <div className="section-card" style={{ padding: 'var(--space-12)', textAlign: 'center', color: 'var(--color-text-secondary)' }}>
-                    Please select or add an Account to display Sites and Contacts details.
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* PRIMARY DIRECTORY LIST VIEW */
-          <EntityTable
-            entities={entities}
-            loading={listLoading}
-            selectedEntityId={selectedEntityId}
-            onRowClick={handleEntityRowClick}
-            onEditClick={(entity) => {
-              setEditingEntity(entity);
-              setIsWizardOpen(true);
-            }}
-            onDeleteClick={handleDeleteEntity}
-            page={page}
-            totalPages={totalPages}
-            totalElements={totalElements}
-            onPageChange={(p) => fetchEntities(searchQuery, p)}
-          />
-        )}
-      </div>
-
-      {/* --- FORM MODALS & DRAWERS --- */}
-
-      {/* 5-Step Customer Wizard Drawer */}
-      <MultiStepForm
-        isOpen={isWizardOpen}
-        onClose={() => setIsWizardOpen(false)}
-        onSubmit={handleWizardSubmit}
-        editEntity={editingEntity}
-        lookups={lookups}
-        lookupsLoading={lookupsLoading}
-      />
-
-      {/* Account Modal */}
-      <AccountFormModal
-        isOpen={isAccountModalOpen}
-        onClose={() => setIsAccountModalOpen(false)}
-        onSubmit={handleAccountSubmit}
-        editAccount={editingAccount}
-        lookups={lookups}
-      />
-
-      {/* Site Address Modal */}
-      <SiteFormModal
-        isOpen={isSiteModalOpen}
-        onClose={() => setIsSiteModalOpen(false)}
-        onSubmit={handleSiteSubmit}
-        editSite={editingSite}
-        lookups={lookups}
-      />
-
-      {/* Contact Details Modal */}
-      <ContactFormModal
-        isOpen={isContactModalOpen}
-        onClose={() => setIsContactModalOpen(false)}
-        onSubmit={handleContactSubmit}
-        editContact={editingContact}
-        lookups={lookups}
-      />
+      {renderContentView()}
     </MainLayout>
   );
 }

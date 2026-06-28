@@ -1,435 +1,481 @@
-# AI Billing System - Catalog Management Backend Implementation Instructions
+# AI Billing System - Catalog Management Frontend Implementation Instructions
 
 ## Project Overview
 
-You are extending an existing enterprise application called **AI Billing System**.
+This project is the frontend of the AI Billing System.
 
-Current project directory structure:
+Current project structure:
 
+```
 Billing Management/
 │
 ├── Entity-Management-Backend/
 ├── Entity-Management-Frontend/
 ├── Catalog Module.png
-└── (this instructions.md)
+└── instructions.md
+```
 
-The Entity Management feature has already been fully implemented in both backend and frontend.
+The Entity Management feature has already been completed in both backend and frontend.
 
-Your responsibility is to implement **ONLY the backend** for the next feature:
+The Catalog Management backend has also been completed.
 
-# Catalog Management
+Your responsibility is to implement **ONLY the Catalog Management frontend** by extending the existing frontend architecture.
 
-Do NOT modify the existing Entity Management functionality unless integration is required.
+Do NOT redesign the application.
+
+Do NOT introduce a new UI framework.
+
+The Catalog module must look and behave like it has always been part of the application.
 
 ---
 
-# Step 1 - Understand the Existing Project (Mandatory)
+# Step 1 - Analyze the Existing Frontend (MANDATORY)
 
-Before writing any code, thoroughly analyze the existing backend project.
+Before writing any code, analyze the entire frontend project.
 
 Location:
 
-Entity-Management-Backend/
+```
+Entity-Management-Frontend/
+```
 
 Understand:
 
-- Overall project architecture
-- Package structure
-- Layered architecture
-- Coding conventions
-- Naming conventions
-- Entity structure
-- DTO pattern
-- Repository pattern
-- Service layer
-- Controller design
-- Exception handling
-- Validation strategy
-- API response format
-- Audit implementation
-- Logging
-- Soft delete implementation
-- Flyway migration strategy
-- Lookup implementation
-- Existing utility classes
-- Existing configuration
-- Existing security implementation (if present)
+* Folder structure
+* Routing architecture
+* Layout system
+* Navigation
+* Design system
+* Component library
+* Page templates
+* Table components
+* Form components
+* Dialogs
+* Drawers
+* State management
+* API service layer
+* Hooks
+* Error handling
+* Notification system
+* Loading states
+* Reusable utilities
+* Styling approach
+* Theme configuration
 
-The Catalog Management module MUST follow exactly the same architecture and coding style.
+The Catalog module MUST reuse the existing architecture.
 
-Do not introduce a new architecture.
+Do not recreate components that already exist.
+
+Reuse wherever possible.
 
 ---
 
-# Step 2 - Analyze the Catalog Module Architecture (Mandatory)
+# Step 2 - Analyze the Existing Backend (MANDATORY)
 
-Open and study:
+Analyze the Catalog backend inside:
 
+```
+Entity-Management-Backend/
+```
+
+Understand:
+
+* REST APIs
+* Request DTOs
+* Response DTOs
+* Validation rules
+* Lookup APIs
+* Search APIs
+* Relationships
+* Pagination
+* Sorting
+* Error responses
+
+The backend is the implementation source of truth.
+
+Never invent fields.
+
+Never hardcode lookup values.
+
+---
+
+# Step 3 - Analyze the Business Architecture (MANDATORY)
+
+Open:
+
+```
 Catalog Module.png
+```
 
-located inside:
+Study:
 
-Billing Management/
+* Category hierarchy
+* Catalog Item structure
+* Item types
+* Item behavior flags
+* UOM mapping
+* Warehouse management
+* Inventory Balance
+* Inventory Transactions
+* Business workflow
+* Validation rules
 
-Do not begin implementation until the entire architecture has been understood.
-
-Analyze:
-
-- Domain model
-- Entity relationships
-- Business workflow
-- Inventory workflow
-- Category hierarchy
-- UOM management
-- Warehouse management
-- Inventory transactions
-- Business rules
-- Lookup data
-- Master data dependencies
-
-The image is the business source of truth.
-
-Implement according to it.
+The UI must accurately represent this architecture.
 
 ---
 
-# Step 3 - Understand Module Scope
+# Step 4 - UI Design Principles
 
-The Catalog Management module is NOT simply Product Management.
+Follow exactly the same enterprise design language already established by the Entity Management module.
 
-It is an enterprise master-data module responsible for:
+Maintain:
 
-• Catalog Categories
-• Catalog Items
-• Item UOMs
-• Warehouses
-• Inventory Balances
-• Inventory Transactions
+* Same spacing
+* Same typography
+* Same color palette
+* Same shadows
+* Same cards
+* Same buttons
+* Same tables
+* Same dialogs
+* Same navigation
+* Same responsiveness
 
-This module will become the foundation for:
-
-Order Management
-
-↓
-
-Transaction Management
-
-↓
-
-Invoice Management
-
-↓
-
-AI Insights
-
-↓
-
-Predictive Cash Flow
-
-Design accordingly.
+Users should not be able to distinguish between the Entity and Catalog modules based on UI quality or styling.
 
 ---
 
-# Step 4 - Preserve Existing Project Standards
-
-Everything added must follow the existing backend implementation.
-
-Reuse:
-
-- Base entities
-- Base repositories
-- Base services
-- Common DTOs
-- Generic response wrappers
-- Exception handlers
-- Validation annotations
-- Audit framework
-- Lookup architecture
-
-Never duplicate functionality that already exists.
-
----
-
-# Step 5 - Backend Implementation Order
+# Step 5 - Feature Implementation Order
 
 Implement incrementally.
 
-Phase 1
+## Phase 1 - Catalog Categories
 
-Catalog Category
+Create:
 
-- Database
-- Entity
-- Repository
-- DTOs
-- Mapper
-- Service
-- Controller
-- Validation
-- Flyway Migration
-
-Business Rules
-
-- Parent Category support
-- Recursive hierarchy
-- Active/Inactive
-- Only leaf categories can contain catalog items
-
----
-
-Phase 2
-
-Catalog Item
-
-Implement
-
-- Entity
-- DTOs
-- CRUD APIs
-- Validation
-- Mapping
-- Relationships
-
-Support
-
-- Goods
-- Services
-- Software
-- Licenses
-- Warranty
-
-Item Behaviour Flags
-
-- Sellable
-- Purchasable
-- Inventory Tracked
-- Stocked
-- Service Item
-
----
-
-Phase 3
-
-Item UOM
-
-Implement
-
-- UOM Mapping
-- Primary UOM
-- Conversion Factors
-
-Rules
-
-- One Primary UOM
-- Multiple Secondary UOMs
-- Conversion validation
-
----
-
-Phase 4
-
-Warehouse
-
-Implement
-
-Warehouse Master
-
-Support
-
-- CRUD
-- Status
-- Address
-- Validation
-
----
-
-Phase 5
-
-Inventory Balance
-
-Implement inventory balance model.
-
-Inventory Balance should NOT be manually edited.
-
-It must always represent the calculated stock.
-
----
-
-Phase 6
-
-Inventory Transactions
-
-Implement inventory ledger.
-
-Support transaction types such as:
-
-- Purchase Receipt
-- Sales Issue
-- Purchase Return
-- Sales Return
-- Inventory Adjustment
-- Transfer In
-- Transfer Out
-- Reservation
-- Reservation Release
-
-Inventory Balance must be updated through transactions.
-
-Never update stock directly.
-
----
-
-# Step 6 - Database
-
-Follow existing Flyway migration strategy.
-
-Create normalized tables.
-
-Follow naming conventions already used in Entity Management.
-
-Maintain proper foreign keys.
-
-Maintain indexes where required.
-
-Do not duplicate lookup tables if reusable ones already exist.
-
----
-
-# Step 7 - REST APIs
-
-Design REST endpoints consistent with the Entity Management module.
+* Category Listing
+* Category Search
+* Category Details
+* Create Category
+* Edit Category
 
 Support:
 
-Categories
+* Parent Category
+* Active/Inactive Status
+* Recursive hierarchy
+* Tree visualization (if supported)
 
-- Create
-- Update
-- Delete
-- Search
-- Get Details
-
-Catalog Items
-
-- CRUD
-- Search
-
-Warehouses
-
-- CRUD
-
-UOM
-
-- CRUD
-
-Inventory Transactions
-
-- Create
-- Search
-- History
-
-Inventory Balance
-
-- View
-
-Maintain existing response structure.
+Only leaf categories should be selectable for item assignment.
 
 ---
 
-# Step 8 - Validation
+## Phase 2 - Catalog Items
 
-Implement all business rules.
+Implement:
+
+* Item Listing
+* Search
+* Filters
+* Item Details
+* Create Item
+* Edit Item
+
+Support:
+
+* Goods
+* Services
+* Software
+* Licenses
+* Warranty
+
+Display item behavior flags clearly.
+
+Use badges or chips.
+
+---
+
+## Phase 3 - UOM Management
+
+Display:
+
+Primary UOM
+
+Additional UOMs
+
+Conversion Factors
+
+Support:
+
+* Add
+* Edit
+* Delete
+
+Validate only one Primary UOM.
+
+---
+
+## Phase 4 - Warehouse Management
+
+Implement:
+
+Warehouse List
+
+Warehouse Details
+
+Create Warehouse
+
+Edit Warehouse
+
+Status Management
+
+---
+
+## Phase 5 - Inventory Balance
+
+Read-only view.
+
+Display:
+
+* Quantity On Hand
+* Reserved Quantity
+* Available Quantity
+
+No manual editing.
+
+Use backend APIs only.
+
+---
+
+## Phase 6 - Inventory Transactions
+
+Implement:
+
+Transaction History
+
+Filters
+
+Search
+
+Transaction Details
+
+Support transaction types:
+
+* Purchase Receipt
+* Sales Issue
+* Purchase Return
+* Sales Return
+* Inventory Adjustment
+* Reservation
+* Transfer
+
+Display transaction timeline using enterprise data tables.
+
+---
+
+# Step 6 - Navigation
+
+Extend existing navigation.
+
+Add:
+
+Catalog Management
+
+Inside it:
+
+* Categories
+* Catalog Items
+* Warehouses
+* Inventory
+* Inventory Transactions
+
+Do not alter existing Entity navigation.
+
+---
+
+# Step 7 - Component Reuse
+
+Reuse existing components whenever possible.
 
 Examples:
 
-- Category hierarchy validation
-- Leaf category validation
-- Primary UOM validation
-- Warehouse validation
-- Inventory quantity validation
-- Duplicate code prevention
-- Required fields
-- Status validation
+* PageHeader
+* SearchToolbar
+* DataTable
+* StatusBadge
+* FormSection
+* Drawer
+* Modal
+* ConfirmationDialog
+* Pagination
+* LoadingSkeleton
+* EmptyState
+* ErrorState
+* LookupSelect
 
-Validation should exist in both DTOs and Service layer where appropriate.
-
----
-
-# Step 9 - Exception Handling
-
-Reuse existing exception architecture.
-
-Never return raw exceptions.
-
-Return standardized API responses.
+Only create new components when absolutely necessary.
 
 ---
 
-# Step 10 - Logging & Auditing
+# Step 8 - API Integration
 
-Every create, update, delete operation must follow the same audit mechanism already implemented in Entity Management.
+Integrate every backend endpoint.
 
-Do not introduce a separate audit system.
+No mock data.
 
----
+No static JSON.
 
-# Step 11 - Code Quality
+All dropdowns must load dynamically from lookup APIs.
 
-Follow:
-
-- SOLID principles
-- Clean Architecture
-- Layer separation
-- Reusable services
-- Constructor injection
-- No duplicated logic
-- Clear package organization
-- Meaningful class names
+Follow existing API service architecture.
 
 ---
 
-# Step 12 - Integration
+# Step 9 - Forms
 
-The new module must integrate cleanly into the existing backend.
+Organize forms into logical sections.
 
-Do not break Entity Management.
+Examples:
 
-Reuse existing infrastructure whenever possible.
+Catalog Item
 
-Catalog Management should feel like it has always been part of the project.
+Section 1
+
+Basic Information
+
+Section 2
+
+Pricing
+
+Section 3
+
+Behavior
+
+Section 4
+
+Inventory
+
+Section 5
+
+UOM
+
+Avoid long scrolling forms.
+
+Prefer:
+
+Drawers
+
+Dialogs
+
+Multi-section layouts
+
+Reuse existing form components.
 
 ---
 
-# Expected Deliverables
+# Step 10 - Data Tables
 
-The task is complete only when:
+All listing screens should follow the existing enterprise table design.
 
-✓ Catalog Categories implemented
+Support:
 
-✓ Catalog Items implemented
+* Sticky headers
+* Search
+* Sorting
+* Pagination
+* Row selection
+* Inline actions
+* Status badges
+* Loading skeletons
+* Empty state
 
-✓ Item UOM implemented
+Maintain consistency with Entity Management tables.
 
-✓ Warehouses implemented
+---
 
-✓ Inventory Balance implemented
+# Step 11 - State Management
 
-✓ Inventory Transactions implemented
+Separate:
 
-✓ Flyway migrations added
+* UI State
+* Form State
+* API State
+* Lookup State
+* Selection State
 
-✓ REST APIs completed
+Reuse existing state management strategy.
+
+---
+
+# Step 12 - Validation
+
+Follow backend validation.
+
+Implement:
+
+* Required fields
+* Inline validation
+* Business rule validation
+* User-friendly error messages
+
+Surface backend validation errors clearly.
+
+---
+
+# Step 13 - Performance
+
+Implement:
+
+* Lazy loading
+* Code splitting
+* Memoization where useful
+* Efficient rendering
+* API caching (if existing architecture supports it)
+
+---
+
+# Step 14 - Accessibility
+
+Support:
+
+* Keyboard navigation
+* Proper labels
+* Focus management
+* Accessible dialogs
+* Accessible tables
+
+---
+
+# Step 15 - Deliverables
+
+The Catalog Management frontend is complete only when:
+
+✓ Existing frontend architecture preserved
+
+✓ Existing UI reused
+
+✓ Backend fully integrated
+
+✓ Categories completed
+
+✓ Catalog Items completed
+
+✓ UOM management completed
+
+✓ Warehouses completed
+
+✓ Inventory Balance completed
+
+✓ Inventory Transactions completed
+
+✓ Search completed
 
 ✓ Validation completed
 
-✓ Logging integrated
+✓ Responsive design completed
 
-✓ Auditing integrated
+✓ Enterprise styling maintained
 
-✓ Existing architecture preserved
+✓ No regressions in Entity Management
 
-✓ Backend compiles successfully
-
-Do not begin frontend implementation.
-
-Only implement the backend for Catalog Management.
+Do not implement Order Management or any future modules.

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Compass, Menu, X, Users, LayoutDashboard, CreditCard, TrendingUp } from 'lucide-react';
+import { Compass, Menu, X, Users, LayoutDashboard, CreditCard, TrendingUp, FolderTree, Package, Warehouse, Boxes, History } from 'lucide-react';
 import './MainLayout.css';
 
-export default function MainLayout({ children }) {
+export default function MainLayout({ children, currentView = 'entities', onViewChange }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
@@ -50,14 +50,39 @@ export default function MainLayout({ children }) {
         </div>
 
         <ul className="navigator-menu">
-          <li className="navigator-item">
+          <li className={`navigator-item ${currentView === 'dashboard' ? 'active' : ''}`} onClick={() => { onViewChange && onViewChange('dashboard'); setIsNavOpen(false); }}>
             <span className="navigator-item-icon"><LayoutDashboard size={18} /></span>
             <span>Dashboard</span>
           </li>
-          <li className="navigator-item active" onClick={() => setIsNavOpen(false)}>
+          <li className={`navigator-item ${currentView === 'entities' ? 'active' : ''}`} onClick={() => { onViewChange && onViewChange('entities'); setIsNavOpen(false); }}>
             <span className="navigator-item-icon"><Users size={18} /></span>
             <span>Manage Entities</span>
           </li>
+          
+          <li className="navigator-menu-header">Catalog Management</li>
+          
+          <li className={`navigator-item ${currentView === 'categories' ? 'active' : ''}`} onClick={() => { onViewChange && onViewChange('categories'); setIsNavOpen(false); }}>
+            <span className="navigator-item-icon"><FolderTree size={18} /></span>
+            <span>Categories</span>
+          </li>
+          <li className={`navigator-item ${currentView === 'items' ? 'active' : ''}`} onClick={() => { onViewChange && onViewChange('items'); setIsNavOpen(false); }}>
+            <span className="navigator-item-icon"><Package size={18} /></span>
+            <span>Catalog Items</span>
+          </li>
+          <li className={`navigator-item ${currentView === 'warehouses' ? 'active' : ''}`} onClick={() => { onViewChange && onViewChange('warehouses'); setIsNavOpen(false); }}>
+            <span className="navigator-item-icon"><Warehouse size={18} /></span>
+            <span>Warehouses</span>
+          </li>
+          <li className={`navigator-item ${currentView === 'inventory' ? 'active' : ''}`} onClick={() => { onViewChange && onViewChange('inventory'); setIsNavOpen(false); }}>
+            <span className="navigator-item-icon"><Boxes size={18} /></span>
+            <span>Inventory Balances</span>
+          </li>
+          <li className={`navigator-item ${currentView === 'transactions' ? 'active' : ''}`} onClick={() => { onViewChange && onViewChange('transactions'); setIsNavOpen(false); }}>
+            <span className="navigator-item-icon"><History size={18} /></span>
+            <span>Inventory Transactions</span>
+          </li>
+
+          <li className="navigator-menu-header">Other</li>
           <li className="navigator-item">
             <span className="navigator-item-icon"><CreditCard size={18} /></span>
             <span>Billing & Invoices</span>

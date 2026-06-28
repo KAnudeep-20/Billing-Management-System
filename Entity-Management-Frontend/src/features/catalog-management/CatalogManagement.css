@@ -1,0 +1,191 @@
+/* Catalog Management Feature Custom CSS */
+
+/* Category Tree Styles */
+.category-tree-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.category-node {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-surface);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.category-node:hover {
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-sm);
+  background-color: var(--color-bg-hover);
+}
+
+.category-node-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.category-indent-0 { margin-left: 0; }
+.category-indent-1 { margin-left: var(--space-6); border-left: 2px dashed var(--color-border); }
+.category-indent-2 { margin-left: calc(var(--space-6) * 2); border-left: 2px dashed var(--color-border); }
+.category-indent-3 { margin-left: calc(var(--space-6) * 3); border-left: 2px dashed var(--color-border); }
+
+.category-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+}
+
+.category-toggle-btn:hover {
+  background-color: var(--color-bg-muted);
+}
+
+/* Item List Filters */
+.filters-row {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  width: 100%;
+}
+
+.filter-select {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-secondary);
+  min-width: 160px;
+}
+
+.filter-select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+/* Timeline Layout for Transactions */
+.transaction-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.transaction-card {
+  border-left: 3px solid var(--color-primary);
+  background-color: var(--color-bg-surface);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  border-top: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.transaction-card.PURCHASE_RECEIPT { border-left-color: var(--color-success); }
+.transaction-card.SALES_ISSUE { border-left-color: var(--color-primary); }
+.transaction-card.PURCHASE_RETURN { border-left-color: var(--color-error); }
+.transaction-card.SALES_RETURN { border-left-color: var(--color-success); }
+.transaction-card.TRANSFER_OUT { border-left-color: var(--color-warning); }
+.transaction-card.TRANSFER_IN { border-left-color: var(--color-info); }
+.transaction-card.RESERVATION { border-left-color: hsl(270, 70%, 50%); }
+.transaction-card.RESERVATION_RELEASE { border-left-color: hsl(200, 20%, 50%); }
+.transaction-card.INVENTORY_ADJUSTMENT { border-left-color: var(--color-warning); }
+
+.transaction-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.transaction-qty-badge {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Secondary UOM conversions list */
+.uom-conversions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.uom-conversion-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-bg-muted);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-size: 0.85rem;
+}
+
+/* Quick Balance cards grid */
+.balance-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-4);
+}
+
+.balance-card {
+  background-color: var(--color-bg-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+}
+
+.balance-card-val {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-top: var(--space-1);
+}
+
+.balance-card-lbl {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Catalog Right-Side Drawer Layout Override */
+.catalog-drawer-overlay {
+  position: fixed;
+  top: var(--header-height); /* 70px, immediately below the header */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 400; /* above everything else, below app nav drawer backdrop */
+  display: flex;
+  justify-content: flex-end; /* Drawer style */
+  animation: fadeIn var(--transition-fast) forwards;
+}
+
+.catalog-drawer-container {
+  width: 100%;
+  max-width: 720px;
+  height: 100%;
+  background-color: var(--color-bg-surface);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight var(--transition-normal) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

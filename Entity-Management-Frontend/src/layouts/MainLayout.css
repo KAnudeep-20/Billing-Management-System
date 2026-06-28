@@ -169,6 +169,15 @@
   display: flex;
 }
 
+.navigator-menu-header {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+  padding: var(--space-2) var(--space-4) var(--space-1);
+}
+
 .navigator-footer {
   margin-top: auto;
   padding: var(--space-6);

@@ -6,7 +6,7 @@ server:
 spring:
   application:
     name: entity-management
-
+# jdbc:postgresql://db.wwkastlshkskqmspgubs.supabase.co:5432/postgres
   # ==================== Supabase PostgreSQL ====================
   datasource:
     url: jdbc:postgresql://db.wwkastlshkskqmspgubs.supabase.co:5432/postgres
