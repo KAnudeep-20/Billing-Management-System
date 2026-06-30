@@ -1,481 +1,524 @@
-# AI Billing System - Catalog Management Frontend Implementation Instructions
+# AI Billing System - Rate Card Management Backend Implementation Instructions
 
-## Project Overview
+# Project Overview
 
-This project is the frontend of the AI Billing System.
+You are extending an existing enterprise application called **AI Billing System**.
 
 Current project structure:
 
-```
 Billing Management/
 │
 ├── Entity-Management-Backend/
 ├── Entity-Management-Frontend/
 ├── Catalog Module.png
+├── (Future Modules)
 └── instructions.md
-```
 
-The Entity Management feature has already been completed in both backend and frontend.
+The following modules are already completed:
 
-The Catalog Management backend has also been completed.
+- Entity Management (Backend & Frontend)
+- Catalog Management (Backend & Frontend)
 
-Your responsibility is to implement **ONLY the Catalog Management frontend** by extending the existing frontend architecture.
+Your responsibility is to implement **ONLY the backend** for the next feature:
 
-Do NOT redesign the application.
+# Rate Card Management
 
-Do NOT introduce a new UI framework.
+Do NOT modify the architecture of existing modules.
 
-The Catalog module must look and behave like it has always been part of the application.
+Extend the existing backend following the same architecture, coding standards, conventions, and design patterns.
 
 ---
 
-# Step 1 - Analyze the Existing Frontend (MANDATORY)
+# Step 1 - Analyze Existing Backend (MANDATORY)
 
-Before writing any code, analyze the entire frontend project.
-
-Location:
-
-```
-Entity-Management-Frontend/
-```
+Before writing any code, analyze the existing backend project.
 
 Understand:
 
-* Folder structure
-* Routing architecture
-* Layout system
-* Navigation
-* Design system
-* Component library
-* Page templates
-* Table components
-* Form components
-* Dialogs
-* Drawers
-* State management
-* API service layer
-* Hooks
-* Error handling
-* Notification system
-* Loading states
-* Reusable utilities
-* Styling approach
-* Theme configuration
+- Package structure
+- Layered architecture
+- Naming conventions
+- Entity design
+- DTO pattern
+- Repository pattern
+- Service layer
+- Controller layer
+- Validation strategy
+- Exception handling
+- Generic API responses
+- Audit implementation
+- Logging
+- Soft delete
+- Flyway migrations
+- Lookup implementation
 
-The Catalog module MUST reuse the existing architecture.
+Rate Card Management must follow the exact same project architecture.
 
-Do not recreate components that already exist.
-
-Reuse wherever possible.
+Do not introduce a new architecture.
 
 ---
 
-# Step 2 - Analyze the Existing Backend (MANDATORY)
+# Step 2 - Analyze Existing Modules
 
-Analyze the Catalog backend inside:
+Study the implementation of:
 
-```
-Entity-Management-Backend/
-```
+Entity Management
 
 Understand:
 
-* REST APIs
-* Request DTOs
-* Response DTOs
-* Validation rules
-* Lookup APIs
-* Search APIs
-* Relationships
-* Pagination
-* Sorting
-* Error responses
-
-The backend is the implementation source of truth.
-
-Never invent fields.
-
-Never hardcode lookup values.
-
----
-
-# Step 3 - Analyze the Business Architecture (MANDATORY)
-
-Open:
-
-```
-Catalog Module.png
-```
+- Payment Terms implementation
+- Entity relationships
+- Existing lookup usage
+- Search implementation
 
 Study:
 
-* Category hierarchy
-* Catalog Item structure
-* Item types
-* Item behavior flags
-* UOM mapping
-* Warehouse management
-* Inventory Balance
-* Inventory Transactions
-* Business workflow
-* Validation rules
-
-The UI must accurately represent this architecture.
-
----
-
-# Step 4 - UI Design Principles
-
-Follow exactly the same enterprise design language already established by the Entity Management module.
-
-Maintain:
-
-* Same spacing
-* Same typography
-* Same color palette
-* Same shadows
-* Same cards
-* Same buttons
-* Same tables
-* Same dialogs
-* Same navigation
-* Same responsiveness
-
-Users should not be able to distinguish between the Entity and Catalog modules based on UI quality or styling.
-
----
-
-# Step 5 - Feature Implementation Order
-
-Implement incrementally.
-
-## Phase 1 - Catalog Categories
-
-Create:
-
-* Category Listing
-* Category Search
-* Category Details
-* Create Category
-* Edit Category
-
-Support:
-
-* Parent Category
-* Active/Inactive Status
-* Recursive hierarchy
-* Tree visualization (if supported)
-
-Only leaf categories should be selectable for item assignment.
-
----
-
-## Phase 2 - Catalog Items
-
-Implement:
-
-* Item Listing
-* Search
-* Filters
-* Item Details
-* Create Item
-* Edit Item
-
-Support:
-
-* Goods
-* Services
-* Software
-* Licenses
-* Warranty
-
-Display item behavior flags clearly.
-
-Use badges or chips.
-
----
-
-## Phase 3 - UOM Management
-
-Display:
-
-Primary UOM
-
-Additional UOMs
-
-Conversion Factors
-
-Support:
-
-* Add
-* Edit
-* Delete
-
-Validate only one Primary UOM.
-
----
-
-## Phase 4 - Warehouse Management
-
-Implement:
-
-Warehouse List
-
-Warehouse Details
-
-Create Warehouse
-
-Edit Warehouse
-
-Status Management
-
----
-
-## Phase 5 - Inventory Balance
-
-Read-only view.
-
-Display:
-
-* Quantity On Hand
-* Reserved Quantity
-* Available Quantity
-
-No manual editing.
-
-Use backend APIs only.
-
----
-
-## Phase 6 - Inventory Transactions
-
-Implement:
-
-Transaction History
-
-Filters
-
-Search
-
-Transaction Details
-
-Support transaction types:
-
-* Purchase Receipt
-* Sales Issue
-* Purchase Return
-* Sales Return
-* Inventory Adjustment
-* Reservation
-* Transfer
-
-Display transaction timeline using enterprise data tables.
-
----
-
-# Step 6 - Navigation
-
-Extend existing navigation.
-
-Add:
-
 Catalog Management
 
-Inside it:
+Understand:
 
-* Categories
-* Catalog Items
-* Warehouses
-* Inventory
-* Inventory Transactions
+- Catalog Item
+- Primary UOM
+- Item Status
+- List Price
+- Sellable flag
+- Item lookup APIs
 
-Do not alter existing Entity navigation.
-
----
-
-# Step 7 - Component Reuse
-
-Reuse existing components whenever possible.
-
-Examples:
-
-* PageHeader
-* SearchToolbar
-* DataTable
-* StatusBadge
-* FormSection
-* Drawer
-* Modal
-* ConfirmationDialog
-* Pagination
-* LoadingSkeleton
-* EmptyState
-* ErrorState
-* LookupSelect
-
-Only create new components when absolutely necessary.
+Rate Card must integrate with these modules.
 
 ---
 
-# Step 8 - API Integration
+# Step 3 - Module Purpose
 
-Integrate every backend endpoint.
+Rate Card Management is an independent master module.
 
-No mock data.
+It defines the selling price of Catalog Items.
 
-No static JSON.
+It does NOT own Catalog Items.
 
-All dropdowns must load dynamically from lookup APIs.
+It references Catalog Items.
 
-Follow existing API service architecture.
+Rate Card will later be associated with Entity Management.
 
----
-
-# Step 9 - Forms
-
-Organize forms into logical sections.
-
-Examples:
+Relationship:
 
 Catalog Item
 
-Section 1
+↓
 
-Basic Information
+Rate Card Item
 
-Section 2
+↓
 
-Pricing
+Rate Card
 
-Section 3
+↓
 
-Behavior
-
-Section 4
-
-Inventory
-
-Section 5
-
-UOM
-
-Avoid long scrolling forms.
-
-Prefer:
-
-Drawers
-
-Dialogs
-
-Multi-section layouts
-
-Reuse existing form components.
+Entity
 
 ---
 
-# Step 10 - Data Tables
+# Step 4 - Database Design
 
-All listing screens should follow the existing enterprise table design.
+Create the following tables.
+
+------------------------------------
+
+RATE_CARD
+
+------------------------------------
+
+Fields
+
+- RateCardId
+- RateCardCode (Unique)
+- RateCardName
+- Description
+- Currency
+- Status
+- EffectiveFrom
+- EffectiveTo
+- ActiveFlag
+- Audit Fields
+- Soft Delete Flag
+
+Business Rules
+
+- Code must be unique.
+- Name must be unique.
+- Effective dates are optional.
+- Support Active / Inactive status.
+
+------------------------------------
+
+RATE_CARD_ITEM
+
+------------------------------------
+
+Fields
+
+- RateCardItemId
+- RateCardId (FK)
+- CatalogItemId (FK)
+- PrimaryUomId (FK)
+- UnitPrice
+- Remarks
+- Status
+- Audit Fields
+- Soft Delete Flag
+
+Business Rules
+
+- One Catalog Item can appear only once in a Rate Card.
+- Primary UOM must be copied automatically from Catalog.
+- User cannot modify Primary UOM.
+- Unit Price must be greater than zero.
+- Catalog Item must exist.
+- Catalog Item must be active.
+- Catalog Item must be sellable.
+
+------------------------------------
+
+ENTITY_RATE_CARD
+
+------------------------------------
+
+Association table.
+
+Fields
+
+- EntityRateCardId
+- EntityId (FK)
+- RateCardId (FK)
+- EffectiveFrom
+- EffectiveTo
+- ActiveFlag
+- Audit Fields
+
+Business Rules
+
+- Only one active Rate Card per Entity.
+- Historical assignments should be retained.
+- Entity stores only the association.
+
+---
+
+# Step 5 - Domain Entities
+
+Create:
+
+RateCard
+
+RateCardItem
+
+EntityRateCard
+
+Reuse:
+
+- BaseEntity
+- AuditEntity
+- Soft Delete
+- Existing lookup strategy
+
+---
+
+# Step 6 - DTO Layer
+
+Create DTOs.
+
+Rate Card
+
+- Create
+- Update
+- Response
+- Search
+
+Rate Card Item
+
+- Add Item
+- Update Price
+- Response
+
+Entity Assignment
+
+- Assign Rate Card
+- Update Assignment
+- Response
+
+Follow existing DTO conventions.
+
+---
+
+# Step 7 - Repository Layer
+
+Repositories
+
+RateCardRepository
+
+RateCardItemRepository
+
+EntityRateCardRepository
 
 Support:
 
-* Sticky headers
-* Search
-* Sorting
-* Pagination
-* Row selection
-* Inline actions
-* Status badges
-* Loading skeletons
-* Empty state
+- Search by Code
+- Search by Name
+- Search by Status
+- Get Active Rate Cards
+- Get Items by Rate Card
+- Get Assigned Rate Card for Entity
 
-Maintain consistency with Entity Management tables.
+Reuse existing repository patterns.
 
 ---
 
-# Step 11 - State Management
-
-Separate:
-
-* UI State
-* Form State
-* API State
-* Lookup State
-* Selection State
-
-Reuse existing state management strategy.
-
----
-
-# Step 12 - Validation
-
-Follow backend validation.
+# Step 8 - Service Layer
 
 Implement:
 
-* Required fields
-* Inline validation
-* Business rule validation
-* User-friendly error messages
+Rate Card Service
 
-Surface backend validation errors clearly.
+Responsibilities
+
+- Create
+- Update
+- Delete
+- Activate
+- Deactivate
+- Search
+- Get Details
+
+--------------------------------------------------
+
+Rate Card Item Service
+
+Responsibilities
+
+- Add Item
+- Update Price
+- Remove Item
+- Get Items
+
+Business Logic
+
+When user selects Catalog Item
+
+↓
+
+Fetch Catalog Item
+
+↓
+
+Automatically fetch Primary UOM
+
+↓
+
+Populate Primary UOM
+
+↓
+
+Save Unit Price
+
+Do NOT allow manual Primary UOM editing.
+
+Keep List Price untouched.
+
+List Price is only a reference value.
+
+Rate Card Price becomes the operational selling price.
+
+--------------------------------------------------
+
+Entity Rate Card Service
+
+Responsibilities
+
+- Assign Rate Card
+- Remove Assignment
+- Replace Assignment
+- Get Assigned Rate Card
+
+Business Rule
+
+Deactivate previous assignment before activating new assignment.
 
 ---
 
-# Step 13 - Performance
+# Step 9 - Controller Layer
 
-Implement:
+Create REST APIs.
 
-* Lazy loading
-* Code splitting
-* Memoization where useful
-* Efficient rendering
-* API caching (if existing architecture supports it)
+Rate Card
+
+- Create
+- Update
+- Delete
+- Search
+- Get Details
+
+Rate Card Item
+
+- Add Item
+- Update Price
+- Remove Item
+- List Items
+
+Entity Assignment
+
+- Assign
+- Replace
+- Remove
+- Get Assigned Rate Card
+
+Maintain existing response format.
 
 ---
 
-# Step 14 - Accessibility
+# Step 10 - Validation
 
-Support:
+Implement validation.
 
-* Keyboard navigation
-* Proper labels
-* Focus management
-* Accessible dialogs
-* Accessible tables
+Examples
+
+- Unique Rate Card Code
+- Unique Rate Card Name
+- Positive Price
+- Duplicate Catalog Item prevention
+- Active Catalog Item
+- Sellable Catalog Item
+- Primary UOM exists
+- Effective dates validation
+
+Reuse existing validation framework.
 
 ---
 
-# Step 15 - Deliverables
+# Step 11 - Flyway Migration
 
-The Catalog Management frontend is complete only when:
+Create Flyway migrations.
 
-✓ Existing frontend architecture preserved
+Follow naming conventions.
 
-✓ Existing UI reused
+Maintain:
 
-✓ Backend fully integrated
+- Foreign Keys
+- Indexes
+- Constraints
 
-✓ Categories completed
+Reuse existing migration strategy.
 
-✓ Catalog Items completed
+---
 
-✓ UOM management completed
+# Step 12 - Audit & Logging
 
-✓ Warehouses completed
+Reuse:
 
-✓ Inventory Balance completed
+- Existing Audit Framework
+- Logging
+- Exception Handling
+- Soft Delete
 
-✓ Inventory Transactions completed
+No duplicate implementations.
 
-✓ Search completed
+---
+
+# Step 13 - Search APIs
+
+Support searching by:
+
+Rate Cards
+
+- Code
+- Name
+- Status
+
+Rate Card Items
+
+- Item Code
+- Item Name
+
+Entity Assignment
+
+- Entity Name
+- Rate Card Name
+
+Support pagination and sorting.
+
+---
+
+# Step 14 - Integration
+
+Catalog Integration
+
+Read only
+
+Reuse:
+
+- Catalog Item
+- Primary UOM
+- Item Status
+- Sellable flag
+
+Do not duplicate catalog information.
+
+--------------------------------------------------
+
+Entity Integration
+
+Add Rate Card association to Entity.
+
+Exactly like Payment Terms.
+
+Do not embed Rate Card inside Entity.
+
+Entity stores only RateCardId.
+
+---
+
+# Step 15 - Future Readiness
+
+Expose reusable service methods for future modules.
+
+Examples
+
+Get Price By Rate Card
+
+Get Price By Catalog Item
+
+Get Price By Entity
+
+These APIs will later be used by Order Management.
+
+---
+
+# Completion Checklist
+
+The backend is complete only when:
+
+✓ Rate Card Master implemented
+
+✓ Rate Card Item implemented
+
+✓ Entity association implemented
+
+✓ Database design completed
+
+✓ Flyway migrations completed
+
+✓ CRUD APIs completed
+
+✓ Search APIs completed
 
 ✓ Validation completed
 
-✓ Responsive design completed
+✓ Audit integrated
 
-✓ Enterprise styling maintained
+✓ Logging integrated
 
-✓ No regressions in Entity Management
+✓ Existing architecture preserved
 
-Do not implement Order Management or any future modules.
+✓ Backend builds successfully
+
+Do not implement frontend.
+
+Only complete the backend.
